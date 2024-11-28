@@ -19,5 +19,29 @@ docker build -t getting-started .
 Start an app container:
 1.Run your container using the docker run command and specify the name of the image you just created:
 docker run -d -p 127.0.0.1:3000:3000 getting-started
-
 2.After a few seconds, open your web browser to http://localhost:3000
+
+Update the application:
+
+1. In the src/static/js/app.js file, update line 56 to use the new empty text.
+- <p className="text-center">No items yet! Add one above!</p>
++ <p className="text-center">You have no todo items yet! Add one above!</p>
+
+2. Build your updated version of the image, using the docker build command.
+docker build -t getting-started .
+
+3. Start a new container using the updated code.
+docker run -dp 127.0.0.1:3000:3000 getting-started (It will throw error)
+The error occurred because you aren't able to start the new container while your old container is still running. The reason is that the old container is already using the host's port 3000 and only one process on the machine (containers included) can listen to a specific port. To fix this, you need to remove the old container.
+
+- Remove a container using the CLI 
+	docker ps
+	docker stop <the-container-id>
+	docker rm <the-container-id>
+	- You can stop and remove a container in a single command by adding the force flag to the docker rm 	command. For example: docker rm -f <the-container-id>
+- Start the updated app container:
+	docker run -dp 127.0.0.1:3000:3000 getting-started
+	- Refresh your browser on http://localhost:3000 and you should see your updated help text.
+
+
+
